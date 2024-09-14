@@ -6,12 +6,12 @@ export async function POST(req) {
     // TODO: 透過base64讓AI辨識圖片
     // 文件連結：https://platform.openai.com/docs/guides/vision?lang=node
     const systemPrompt = ``;
-    const propmpt = ``;
+    const prompt = ``;
 
     const openAIReqBody = {
         messages: [
             { "role": "system", "content": systemPrompt },
-            { "role": "user", "content": propmpt }
+            { "role": "user", "content": prompt }
         ],
         model: "gpt-4o-mini",
     };

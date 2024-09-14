@@ -1,24 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { faImage } from "@fortawesome/free-solid-svg-icons"
 import CurrentFileIndicator from "@/components/CurrentFileIndicator";
 import PageHeader from "@/components/PageHeader";
 import GeneratorButton from "@/components/GenerateButton";
+import ImageGenCard from "@/components/ImageGenCard";
+import ImageGenPlaceholder from "@/components/ImageGenPlaceholder";
 
 export default function ImgGen() {
     const [userInput, setUserInput] = useState("");
+    const [cardList, setCardList] = useState([])
     // 是否在等待回應
     const [isWaiting, setIsWaiting] = useState(false);
+
+    useEffect(() => {
+        axios
+            .get("/api/image-ai")
+            .then(res => {
+                const newCardList = res.data
+                console.log("newCardList: ", newCardList)
+                setCardList(newCardList)
+            })
+            .catch(err => {
+                console.log("error: ", err)
+            })
+    }, [])
 
     function submitHandler(e) {
         e.preventDefault();
         console.log("User Input: ", userInput);
         const body = { userInput };
         console.log("body:", body);
+        setUserInput("");
+        setIsWaiting(true)
         // TODO: 將body POST到 /api/image-ai { userInput: "" }
-
+        axios.post("/api/image-ai", body)
+            .then(res => {
+                const card = res.data;//回應的資料
+                console.log("後端傳給前端的資料: ", card)
+                setCardList([card, ...cardList])
+            })
+            .catch(err => {
+                setIsWaiting(false)
+                console.log("err: ", err)
+                alert("發生錯誤，請稍後再嘗試")
+            });
 
     }
 
@@ -50,6 +78,18 @@ export default function ImgGen() {
             <section>
                 <div className="container mx-auto">
                     {/* TODO: 顯示AI輸出結果 */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
+                        {/* 條件渲染: 有在等待生成結果時才會出現placeHolder，否則渲染null */}
+                        {isWaiting ? <ImageGenPlaceholder /> : null}
+                        {cardList.map(card => {
+                            const { imageURL, prompt, createdAt } = card;
+                            return <ImageGenCard
+                                imageULR={imageURL}
+                                prompt={prompt}
+                                key={createdAt}
+                            />
+                        })}
+                    </div>
 
                 </div>
             </section>
