@@ -84,7 +84,7 @@ export default function ImgGen() {
                         {cardList.map(card => {
                             const { imageURL, prompt, createdAt } = card;
                             return <ImageGenCard
-                                imageULR={imageURL}
+                                imageURL={imageURL}
                                 prompt={prompt}
                                 key={createdAt}
                             />
