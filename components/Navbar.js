@@ -13,9 +13,9 @@ export default function Navbar() {
                 <Link href="/image-generator" className="mr-3 text-slate-900 hover:text-pink-500 font-semibold">
                     AI ImgGen
                 </Link>
-                <Link href="/vision" className="text-slate-900 hover:text-pink-500 font-semibold">
+                {/* <Link href="/vision" className="text-slate-900 hover:text-pink-500 font-semibold">
                     AI Vision
-                </Link>
+                </Link> */}
             </div>
         </nav>
     )
